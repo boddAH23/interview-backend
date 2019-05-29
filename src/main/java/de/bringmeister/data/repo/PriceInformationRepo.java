@@ -7,6 +7,7 @@ import de.bringmeister.data.exception.RepositoryException;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
@@ -20,19 +21,19 @@ public class PriceInformationRepo {
 
     private static final  Logger LOG = LoggerFactory.getLogger(PriceInformationRepo.class);
 
-    private ObjectMapper objectMapper;
+    private ObjectMapper jsonMapper;
 
     private Resource priceFile;
 
-    public PriceInformationRepo(ObjectMapper objectMapper, @Value("classpath:products/prices.json")  Resource priceFile) {
-        this.objectMapper = objectMapper;
+    public PriceInformationRepo(@Qualifier("jsonMapper") ObjectMapper objectMapper, @Value("classpath:products/prices.json")  Resource priceFile) {
+        this.jsonMapper = objectMapper;
         this.priceFile = priceFile;
     }
 
     public List<PriceInformation> getPriceInformation(String id) throws RepositoryException {
         List<PriceInformation> priceList;
         try {
-            priceList = objectMapper.readValue(priceFile.getInputStream(), new TypeReference<List<PriceInformation>>(){});
+            priceList = jsonMapper.readValue(priceFile.getInputStream(), new TypeReference<List<PriceInformation>>(){});
             return priceList.stream()
                     .filter(priceInformation -> StringUtils.equals(priceInformation.getId(), id))
                     .collect(Collectors.toList());
