@@ -31,5 +31,11 @@ dependencies {
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: versions.springboot
 
     testCompile group: 'junit', name: 'junit', version: '4.12'
+
+    testCompile group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: versions.springboot
+}
+
+test {
+    include 'de.bringmeister/*'
 }
 
