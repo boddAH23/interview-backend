@@ -1,3 +1,6 @@
+Swagger:
+http://localhost:8080/swagger-ui.html
+
 Please implement a service that reads in the provided XML and JSON files and exposes the information via a RESTful API.
 
 File structure:
