@@ -31,4 +31,15 @@ public class ProductControllerTest {
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
         assertEquals(list, responseEntity.getBody());
     }
+
+    @Test
+    public void getProduct() {
+        ProductController controller = new ProductController(service);
+        ProductDto productDto = new ProductDto();
+        when(service.getProduct("ID")).thenReturn(productDto);
+
+        ResponseEntity<ProductDto> responseEntity = controller.getProduct("ID");
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+        assertEquals(productDto, responseEntity.getBody());
+    }
 }
