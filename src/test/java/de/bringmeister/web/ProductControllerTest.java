@@ -1,6 +1,7 @@
 package de.bringmeister.web;
 
 import de.bringmeister.main.ProductService;
+import de.bringmeister.main.dto.PriceDto;
 import de.bringmeister.main.dto.ProductDto;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -41,5 +42,16 @@ public class ProductControllerTest {
         ResponseEntity<ProductDto> responseEntity = controller.getProduct("ID");
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
         assertEquals(productDto, responseEntity.getBody());
+    }
+
+    @Test
+    public void getProductPriceForUnit() {
+        ProductController controller = new ProductController(service);
+        PriceDto priceDto = new PriceDto();
+        when(service.getPriceForProductAndUnit("ID", "package")).thenReturn(priceDto);
+
+        ResponseEntity<PriceDto> responseEntity = controller.getProductPriceForUnit("ID", "package");
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+        assertEquals(priceDto, responseEntity.getBody());
     }
 }

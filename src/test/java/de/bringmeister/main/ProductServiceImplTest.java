@@ -73,4 +73,35 @@ public class ProductServiceImplTest {
         when(productRepo.getProduct("ID")).thenReturn(Optional.empty());
         service.getProduct("ID");
     }
+
+    @Test
+    public void getPriceForProductAndUnit() {
+        ProductServiceImpl service = new ProductServiceImpl(productRepo, priceRepo, factory);
+        Product product = new Product();
+        product.setSku("SKU_ID");
+        when(productRepo.getProduct("ID")).thenReturn(Optional.of(product));
+        PriceInformation priceInformation = new PriceInformation();
+        when(priceRepo.getPriceInformation("SKU_ID")).thenReturn(Arrays.asList(priceInformation));
+        PriceDto priceDto = new PriceDto();
+        priceDto.setUnit("package");
+        when(factory.buildPrice(priceInformation)).thenReturn(priceDto);
+        when(factory.buildProduct(product)).thenReturn(new ProductDto());
+
+        PriceDto actualDto = service.getPriceForProductAndUnit("ID", "package");
+        assertEquals(priceDto, actualDto);
+    }
+
+    @Test(expected = ResourceNotFoundException.class)
+    public void getPriceForProductAndUnitWithException() {
+        ProductServiceImpl service = new ProductServiceImpl(productRepo, priceRepo, factory);
+        Product product = new Product();
+        product.setSku("SKU_ID");
+        when(productRepo.getProduct("ID")).thenReturn(Optional.of(product));
+        PriceInformation priceInformation = new PriceInformation();
+        when(priceRepo.getPriceInformation("SKU_ID")).thenReturn(Arrays.asList(priceInformation));
+        when(factory.buildPrice(priceInformation)).thenReturn(new PriceDto());
+        when(factory.buildProduct(product)).thenReturn(new ProductDto());
+
+        service.getPriceForProductAndUnit("ID", "package");
+    }
 }

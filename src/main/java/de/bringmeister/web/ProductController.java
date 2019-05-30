@@ -1,6 +1,7 @@
 package de.bringmeister.web;
 
 import de.bringmeister.main.ProductService;
+import de.bringmeister.main.dto.PriceDto;
 import de.bringmeister.main.dto.ProductDto;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -31,4 +32,9 @@ public class ProductController {
         return ResponseEntity.ok(productService.getProduct(id));
     }
 
+    @GetMapping(path = "/{id}/price")
+    public ResponseEntity<PriceDto> getProductPriceForUnit(@PathVariable(value="id") String id, @RequestParam String unit) {
+
+        return ResponseEntity.ok(productService.getPriceForProductAndUnit(id, unit));
+    }
 }

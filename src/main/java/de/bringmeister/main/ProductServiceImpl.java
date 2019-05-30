@@ -8,9 +8,11 @@ import de.bringmeister.data.repo.PriceInformationRepo;
 import de.bringmeister.data.repo.ProductRepo;
 import de.bringmeister.main.dto.PriceDto;
 import de.bringmeister.main.dto.ProductDto;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -43,6 +45,14 @@ public class ProductServiceImpl implements ProductService {
                 .collect(Collectors.toList());
         dto.setPriceDto(priceDtoList);
         return dto;
+    }
+
+    public PriceDto getPriceForProductAndUnit(String productId, String unit) {
+        ProductDto product = getProduct(productId);
+        Optional<PriceDto> optionalPriceDto = product.getPriceDto().stream()
+                .filter(priceDto -> StringUtils.equals(priceDto.getUnit(), unit))
+                .findFirst();
+        return optionalPriceDto.orElseThrow(() -> new ResourceNotFoundException("Unit not found: " + unit));
     }
 
 }
